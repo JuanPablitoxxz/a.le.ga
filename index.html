@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Homenaje cósmico interactivo de graduación para Aleja • Ingeniera Ambiental">
+  <title>Aleja • Ingeniera Ambiental</title>
+  
+  <!-- Tipografías seleccionadas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Librerías 3D y Animaciones -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- Canvas WebGL de Three.js (Cosmos perpetuo sobre fondo negro #000000) -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- Brillo cósmico etéreo -->
+  <div class="space-aurora"></div>
+
+  <!-- Barra de Progreso Tipo Video / Historia (5 Segmentos) -->
+  <div class="story-progress-bar" id="story-progress-bar">
+    <div class="story-segment"><div class="segment-fill" id="seg-0"></div></div>
+    <div class="story-segment"><div class="segment-fill" id="seg-1"></div></div>
+    <div class="story-segment"><div class="segment-fill" id="seg-2"></div></div>
+    <div class="story-segment"><div class="segment-fill" id="seg-3"></div></div>
+    <div class="story-segment"><div class="segment-fill" id="seg-4"></div></div>
+  </div>
+
+  <!-- Controles flotantes mínimos superiores -->
+  <aside class="floating-actions">
+    <!-- Botón Modo Video / Auto-avance -->
+    <button id="video-mode-toggle" class="liquid-icon-btn active" aria-label="Pausar o reanudar auto-reproducción" title="Modo Video (Auto-avance)">
+      <!-- Icono de Pausa (Activo por defecto) -->
+      <svg id="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="6" y="4" width="4" height="16" rx="1.5"></rect>
+        <rect x="14" y="4" width="4" height="16" rx="1.5"></rect>
+      </svg>
+      <!-- Icono de Play -->
+      <svg id="icon-play" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+      </svg>
+      <span class="btn-hover-tip" id="video-tip">Auto: Activo</span>
+    </button>
+
+    <!-- Música Cósmica -->
+    <button id="audio-toggle" class="liquid-icon-btn" aria-label="Música ambiental" title="Música cósmica">
+      <span class="audio-waves" id="audio-waves">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </span>
+      <span class="btn-hover-tip">Música</span>
+    </button>
+
+    <!-- Pantalla Completa -->
+    <button id="fullscreen-toggle" class="liquid-icon-btn" aria-label="Pantalla completa" title="Pantalla completa">
+      <svg id="fs-icon-enter" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+      </svg>
+      <svg id="fs-icon-exit" class="hidden" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 14h6m0 0v6m0-6-7 7m17-11h-6m0 0V4m0 6 7-7m-7 17v-6m0 0h6m-6 0 7 7M3 7h6m0 0V1m0 6L2 1"/>
+      </svg>
+      <span class="btn-hover-tip">Pantalla</span>
+    </button>
+  </aside>
+
+  <!-- Flechas laterales de avance rápido para Tablet y PC -->
+  <button class="screen-arrow arrow-prev" id="global-prev" aria-label="Capítulo anterior">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <path d="M15 18l-6-6 6-6"/>
+    </svg>
+  </button>
+  <button class="screen-arrow arrow-next" id="global-next" aria-label="Siguiente capítulo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <path d="M9 18l6-6-6-6"/>
+    </svg>
+  </button>
+
+  <!-- Contenedor Principal: Cápsulas de Cristal Líquido (Liquid Glass) -->
+  <main class="narrative-viewport" id="narrative-viewport">
+    
+    <!-- Apartado 0: Bienvenida / Gran Logro -->
+    <section class="liquid-capsule active" data-chapter="0" id="chapter-0">
+      <div class="liquid-glass welcome-frame" id="scroll-frame-0">
+        <div class="liquid-sheen"></div>
+        
+        <header class="personal-header">
+          <span class="handwritten-intro">Reconocimiento a tu esfuerzo,</span>
+          <h1 class="liquid-name">Aleja</h1>
+        </header>
+
+        <div class="personal-body">
+          <p class="intimate-quote">
+            "El éxito no llega por casualidad; es el fruto de la disciplina, el rigor y la firmeza para superar cada reto académico."
+          </p>
+          <p class="strong-text">
+            Muchas felicidades por este gran logro profesional, el primero de muchísimos más que vendrán en tu vida. 
+            Culminar una carrera universitaria exige constancia, madurez y perseverancia, cualidades que has demostrado con creces en cada etapa de este recorrido.
+          </p>
+          <p class="soft-text">
+            Este espacio conmemora el fruto de tu trabajo y la determinación con la que construiste este gran paso hacia el futuro.
+          </p>
+        </div>
+
+        <footer class="capsule-footer">
+          <button class="liquid-pill-btn primary" id="start-journey-btn">
+            <span>Iniciar recorrido</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </footer>
+      </div>
+    </section>
+
+    <!-- Apartado 1: El Esfuerzo en Aprender y Resolver Dudas -->
+    <section class="liquid-capsule" data-chapter="1" id="chapter-1">
+      <div class="liquid-glass story-frame" id="scroll-frame-1">
+        <div class="liquid-sheen"></div>
+        
+        <div class="chapter-tag">I • La Dedicación</div>
+        <h2 class="capsule-title">El empeño constante por aprender</h2>
+
+        <div class="liquid-media-bubble" onclick="openLightboxFromSrc('assets/1_salon_clases.jpg', 'Siempre atenta, investigando y resolviendo cada duda que surgía')">
+          <img src="assets/1_salon_clases.jpg" 
+               alt="Aleja participando activamente en el salón de clases" 
+               class="bubble-img"
+               id="media-1">
+          <div class="bubble-reflection"></div>
+          <span class="bubble-caption">Siempre con la mano arriba, buscando entender cada concepto a fondo</span>
+        </div>
+
+        <div class="personal-body">
+          <p>
+            Nadie más que tú se esforzaba tanto en aprender de verdad. Mientras otros se conformaban con lo básico, 
+            tú siempre buscabas ir más allá, investigando, preguntando e intentando solucionar cada duda que te surgía en el camino.
+          </p>
+          <p class="whisper-note">
+            Esa curiosidad constante y el compromiso por dominar cada tema marcaron la diferencia a lo largo de toda tu formación.
+          </p>
+        </div>
+
+        <footer class="capsule-nav">
+          <button class="liquid-pill-btn secondary" data-target="0">← Inicio</button>
+          <button class="liquid-pill-btn primary" data-target="2">Las Desveladas →</button>
+        </footer>
+      </div>
+    </section>
+
+    <!-- Apartado 2: Las Desveladas, los Mapas y Aguas Residuales -->
+    <section class="liquid-capsule" data-chapter="2" id="chapter-2">
+      <div class="liquid-glass story-frame" id="scroll-frame-2">
+        <div class="liquid-sheen"></div>
+        
+        <div class="chapter-tag">II • La Superación</div>
+        <h2 class="capsule-title">Noches de mapas y retos superados</h2>
+
+        <div class="liquid-media-bubble" onclick="openLightboxFromSrc('assets/2_estudiando_mapas.jpg', 'Horas de madrugada entre mapas, planos cartográficos y materias exigentes')">
+          <img src="assets/2_estudiando_mapas.jpg" 
+               alt="Estudiando hasta tarde y diseñando mapas" 
+               class="bubble-img"
+               id="media-2">
+          <div class="bubble-reflection"></div>
+          <span class="bubble-caption">Las desveladas trazando mapas y repasando temas complejos</span>
+        </div>
+
+        <div class="personal-body">
+          <p>
+            Fueron innumerables las desveladas que te pegabas haciendo mapas con meticulosa precisión, 
+            revisando planos y repasando una y otra vez para materias tan desafiantes como <strong>aguas residuales</strong>. 
+          </p>
+          <p>
+            Fueron jornadas exigentes donde el cansancio se hacía sentir, pero en cada parcial, entrega y proyecto demostraste 
+            que siempre podías superarte una y otra vez sin dar un paso atrás.
+          </p>
+          <p class="whisper-note">
+            Cada madrugada de estudio fue puliendo la ingeniera rigurosa y capaz que hoy eres.
+          </p>
+        </div>
+
+        <footer class="capsule-nav">
+          <button class="liquid-pill-btn secondary" data-target="1">← En el Aula</button>
+          <button class="liquid-pill-btn primary" data-target="3">Ingeniera Ambiental →</button>
+        </footer>
+      </div>
+    </section>
+
+    <!-- Apartado 3: Sapo Verde Graduado - Ingeniera Ambiental -->
+    <section class="liquid-capsule" data-chapter="3" id="chapter-3">
+      <div class="liquid-glass graduation-frame" id="scroll-frame-3">
+        <div class="liquid-sheen gold-sheen"></div>
+        
+        <div class="chapter-tag gold-glow-text">III • El Título Conquistado</div>
+        
+        <div class="triumph-title-group">
+          <h2 class="capsule-title gold-title">¡Ingeniera Ambiental!</h2>
+          <span class="degree-subtitle">Un título ganado a pulso</span>
+        </div>
+
+        <div class="liquid-media-bubble gold-edge" onclick="openLightboxFromSrc('assets/3_sapo_ingeniera.jpg', '¡Sapo verde animado con su toga y título de Ingeniera Ambiental!')">
+          <img src="assets/3_sapo_ingeniera.jpg" 
+               alt="Sapo verde animado graduado de Ingeniera Ambiental" 
+               class="bubble-img"
+               id="media-3">
+          <div class="bubble-reflection"></div>
+          <span class="bubble-caption">Celebrando con honores el título de Ingeniera Ambiental</span>
+        </div>
+
+        <div class="personal-body center-copy">
+          <p class="golden-statement">
+            Cada esfuerzo, cada cálculo y cada desvelo finalmente dieron su mayor fruto. 
+            Hoy portas con total legitimidad y orgullo el título de <strong>Ingeniera Ambiental</strong>.
+          </p>
+          <p>
+            El planeta y tu profesión reciben a una mujer dedicada, disciplinada y lista para dejar una huella positiva en el mundo.
+          </p>
+        </div>
+
+        <!-- Botón de Pirotecnia Cósmica -->
+        <div class="celebrate-row">
+          <button id="btn-fireworks" class="liquid-pill-btn gold-sparkle-btn">
+            <span class="spark-icon">✨</span>
+            <span>¡Celebrar este gran hito!</span>
+          </button>
+        </div>
+
+        <footer class="capsule-nav">
+          <button class="liquid-pill-btn secondary" data-target="2">← El Esfuerzo</button>
+          <button class="liquid-pill-btn primary" data-target="4">Tu Momento →</button>
+        </footer>
+      </div>
+    </section>
+
+    <!-- Apartado 4: Momento de Graduación & Mensaje Sincero -->
+    <section class="liquid-capsule" data-chapter="4" id="chapter-4">
+      <div class="liquid-glass letter-frame" id="scroll-frame-4">
+        <div class="liquid-sheen"></div>
+        
+        <div class="chapter-tag">IV • La Celebración</div>
+        <h2 class="capsule-title">Tu momento de estar inmensamente feliz</h2>
+
+        <div class="liquid-media-bubble gold-edge" onclick="openLightboxFromSrc('assets/4_momento_graduacion.jpg', '¡Felicidades, ricitos de oro!')">
+          <img src="assets/4_momento_graduacion.jpg" 
+               alt="Aleja feliz en su ceremonia de graduación" 
+               class="bubble-img"
+               id="media-4">
+          <div class="bubble-reflection"></div>
+          <span class="bubble-caption">Sonríe con el alma: hoy cosechas todo lo que sembraste</span>
+        </div>
+
+        <div class="liquid-letter-paper">
+          <p>
+            Hoy es un momento para que estés verdaderamente feliz y satisfecha contigo misma.
+          </p>
+          <p>
+            Estoy muy orgulloso y feliz de que hayas podido lograr este gran objetivo, que es solo uno de los muchos logros más 
+            que vas a alcanzar en tu vida. En ese poco tiempo que tuve la oportunidad de acompañarte en este gran proceso, vi que eras una muy buena estudiante 
+            y una chica con todas las capacidades para cada día superarse más y más.
+          </p>
+          <p>
+            A pesar de todas las dificultades que se presentaron a lo largo de toda tu carrera, lograste finalizarla con éxito, y eso es algo que de verdad 
+            no lo cumple cualquiera.
+          </p>
+          
+          <div class="letter-signature">
+            <span class="handwritten-sign">¡Muchas felicidades en esta siguiente etapa de tu vida, ricitos de oro!</span>
+          </div>
+        </div>
+
+        <footer class="capsule-nav">
+          <button class="liquid-pill-btn secondary" data-target="3">← El Título</button>
+          <button class="liquid-pill-btn primary" data-target="0" id="btn-replay">Volver a empezar ↺</button>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Paginador Orbital Líquido -->
+  <nav class="liquid-orbit-nav" aria-label="Navegación de capítulos">
+    <button class="orbit-dot active" data-index="0" title="Inicio"></button>
+    <button class="orbit-dot" data-index="1" title="Dedicación"></button>
+    <button class="orbit-dot" data-index="2" title="Mapas y Superación"></button>
+    <button class="orbit-dot" data-index="3" title="Ingeniera Ambiental"></button>
+    <button class="orbit-dot" data-index="4" title="Felicitaciones"></button>
+  </nav>
+
+  <!-- Modal Lightbox (Cristal Líquido Fullscreen) -->
+  <div id="lightbox" class="liquid-lightbox">
+    <div class="lightbox-blur-bg"></div>
+    <div class="lightbox-card">
+      <button class="lightbox-close-btn" id="lightbox-close">&times;</button>
+      <img id="lightbox-img" src="" alt="Recuerdo">
+      <p id="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="audio.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

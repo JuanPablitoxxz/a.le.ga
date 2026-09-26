@@ -1,0 +1,849 @@
+/* ========================================================
+   ESTILOS LIQUID GLASS & COSMOS EN MOVIMIENTO PERPETUO
+   Optimizado para Smartphones, Tablets, PC y Despliegue en Vercel
+   ======================================================== */
+:root {
+  --space-black: #000000;
+  --liquid-glass-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    rgba(10, 10, 16, 0.68) 100%
+  );
+  --liquid-border: rgba(255, 255, 255, 0.18);
+  --liquid-border-focus: rgba(255, 255, 255, 0.35);
+  
+  --liquid-gold: #f8d77e;
+  --liquid-gold-glow: rgba(248, 215, 126, 0.35);
+  --liquid-gold-grad: linear-gradient(135deg, #fff2cc 0%, #f8d77e 45%, #d4a337 100%);
+  
+  --font-serif: 'Italiana', 'Playfair Display', serif;
+  --font-hand: 'Alex Brush', cursive;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --ease-elastic: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-liquid: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--space-black);
+  font-family: var(--font-sans);
+  color: #f1f5f9;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+/* ========================================================
+   CANVAS 3D Y EFECTOS ATMOSFÉRICOS
+   ======================================================== */
+#webgl-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 1;
+  display: block;
+  background-color: #000000;
+}
+
+.space-aurora {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 2;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 60% 40% at 30% 25%, rgba(68, 45, 120, 0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 45% at 75% 75%, rgba(200, 150, 40, 0.08) 0%, transparent 70%);
+  animation: aurora-drift 22s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+
+@keyframes aurora-drift {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+  50% { transform: scale(1.08) translate(-2%, 2%); opacity: 0.9; }
+  100% { transform: scale(0.96) translate(2%, -2%); opacity: 0.7; }
+}
+
+/* ========================================================
+   BARRA DE PROGRESO TIPO VIDEO / HISTORIA (5 SEGMENTOS)
+   ======================================================== */
+.story-progress-bar {
+  position: fixed;
+  top: 14px;
+  left: 20px;
+  right: 20px;
+  max-width: 680px;
+  margin: 0 auto;
+  z-index: 60;
+  display: flex;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.story-segment {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+
+.segment-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--liquid-gold);
+  border-radius: 999px;
+  box-shadow: 0 0 8px rgba(248, 215, 126, 0.8);
+  transition: width 0.1s linear;
+}
+
+/* ========================================================
+   CONTROLES FLOTANTES MÍNIMOS (ESQUINA SUPERIOR DERECHA)
+   ======================================================== */
+.floating-actions {
+  position: fixed;
+  top: 26px;
+  right: 24px;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.liquid-icon-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  transition: all 0.35s var(--ease-elastic);
+  outline: none;
+}
+
+.liquid-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(248, 215, 126, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7), 0 0 18px rgba(248, 215, 126, 0.3);
+}
+
+.liquid-icon-btn.active {
+  border-color: rgba(248, 215, 126, 0.5);
+  box-shadow: 0 0 14px rgba(248, 215, 126, 0.25);
+}
+
+.btn-hover-tip {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: rgba(5, 5, 10, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  color: #cbd5e1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: all 0.25s ease;
+}
+
+.liquid-icon-btn:hover .btn-hover-tip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Ondas sonoras */
+.audio-waves {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 12px;
+}
+
+.audio-waves .bar {
+  width: 2.5px;
+  height: 3px;
+  background-color: var(--liquid-gold);
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
+.liquid-icon-btn.playing .audio-waves .bar:nth-child(1) { animation: liquid-wave 0.75s ease-in-out infinite alternate; }
+.liquid-icon-btn.playing .audio-waves .bar:nth-child(2) { animation: liquid-wave 0.75s ease-in-out infinite alternate 0.25s; }
+.liquid-icon-btn.playing .audio-waves .bar:nth-child(3) { animation: liquid-wave 0.75s ease-in-out infinite alternate 0.45s; }
+
+@keyframes liquid-wave {
+  0% { height: 3px; }
+  100% { height: 13px; }
+}
+
+/* ========================================================
+   FLECHAS LATERALES DE PANTALLA (TABLET & PC)
+   ======================================================== */
+.screen-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 45;
+  transition: all 0.3s var(--ease-elastic);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.arrow-prev { left: 24px; }
+.arrow-next { right: 24px; }
+
+.screen-arrow:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--liquid-gold);
+  color: var(--liquid-gold);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 20px rgba(248, 215, 126, 0.35);
+}
+
+/* ========================================================
+   CONTENEDOR NARRATIVO Y CÁPSULAS LIQUID GLASS
+   ======================================================== */
+.narrative-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: none;
+}
+
+.liquid-capsule {
+  position: absolute;
+  max-width: 620px;
+  width: 90%;
+  max-height: 84vh;
+  max-height: calc(100dvh - 90px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.94) translateY(24px);
+  transition: opacity 0.7s var(--ease-liquid), transform 0.7s var(--ease-liquid), visibility 0.7s;
+  pointer-events: none;
+}
+
+.liquid-capsule.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+/* Estructura del Vidrio Líquido con Curvatura Orgánica Ultra-Redonda */
+.liquid-glass {
+  position: relative;
+  width: 100%;
+  background: var(--liquid-glass-bg);
+  border: 1px solid var(--liquid-border);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-radius: 46px;
+  padding: 40px 44px;
+  box-shadow: 
+    0 40px 90px rgba(0, 0, 0, 0.85),
+    inset 0 1px 2px rgba(255, 255, 255, 0.35),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.06);
+  overflow-y: auto;
+  max-height: 80vh;
+  max-height: calc(100dvh - 100px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.liquid-glass::-webkit-scrollbar {
+  width: 4px;
+}
+.liquid-glass::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+/* Brillo especular superior del cristal curvo */
+.liquid-sheen {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+.liquid-sheen.gold-sheen {
+  background: linear-gradient(90deg, transparent 0%, rgba(248, 215, 126, 0.7) 50%, transparent 100%);
+}
+
+/* ========================================================
+   TIPOGRAFÍA Y CONTENIDO
+   ======================================================== */
+.personal-header {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.handwritten-intro {
+  font-family: var(--font-hand);
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
+  color: #ffd880;
+  display: block;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+}
+
+.liquid-name {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 8vw, 4rem);
+  font-weight: 400;
+  letter-spacing: 3px;
+  background: var(--liquid-gold-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+  filter: drop-shadow(0 2px 18px rgba(248, 215, 126, 0.3));
+}
+
+.chapter-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #cbd5e1;
+  opacity: 0.75;
+  margin-bottom: 8px;
+}
+
+.chapter-tag.gold-glow-text {
+  color: var(--liquid-gold);
+  opacity: 1;
+}
+
+.capsule-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 4.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.25;
+  color: #ffffff;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+}
+
+.gold-title {
+  background: var(--liquid-gold-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.personal-body {
+  font-size: clamp(0.92rem, 2.4vw, 1.02rem);
+  line-height: 1.8;
+  color: #d8e2ec;
+  font-weight: 300;
+  margin-bottom: 22px;
+}
+
+.personal-body p {
+  margin-bottom: 12px;
+}
+
+.strong-text {
+  color: #f8fafc;
+  font-size: 1.02rem;
+  line-height: 1.75;
+}
+
+.intimate-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.8vw, 1.18rem);
+  color: #f1f5f9;
+  line-height: 1.65;
+  border-left: 2px solid rgba(248, 215, 126, 0.6);
+  padding-left: 18px;
+  margin: 16px 0;
+}
+
+.soft-text {
+  color: #94a3b8;
+  font-size: 0.92rem;
+}
+
+.whisper-note {
+  font-style: italic;
+  color: #ffd880;
+  font-size: 0.94rem;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 18px;
+  border-left: 3px solid var(--liquid-gold);
+}
+
+/* ========================================================
+   BURBUJAS LÍQUIDAS MULTIMEDIA (IMÁGENES GENERADAS)
+   ======================================================== */
+.liquid-media-bubble {
+  position: relative;
+  width: 100%;
+  height: clamp(180px, 30vh, 235px);
+  border-radius: 26px;
+  overflow: hidden;
+  margin: 16px 0 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.4s var(--ease-elastic), box-shadow 0.4s ease;
+}
+
+.liquid-media-bubble:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.75);
+}
+
+.liquid-media-bubble.gold-edge {
+  border-color: rgba(248, 215, 126, 0.4);
+  box-shadow: 0 16px 45px rgba(248, 215, 126, 0.18);
+}
+
+.bubble-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-liquid), filter 0.6s ease;
+  filter: brightness(0.95) contrast(1.04);
+}
+
+.liquid-media-bubble:hover .bubble-img {
+  transform: scale(1.05);
+  filter: brightness(1.02);
+}
+
+.bubble-reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: 26px 26px 0 0;
+}
+
+.bubble-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 18px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.88) 0%, transparent 100%);
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
+/* ========================================================
+   SECCIÓN DE GRADUACIÓN
+   ======================================================== */
+.triumph-title-group {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.degree-subtitle {
+  font-family: var(--font-hand);
+  font-size: clamp(1.6rem, 3.5vw, 1.9rem);
+  color: var(--liquid-gold);
+  display: block;
+}
+
+.center-copy {
+  text-align: center;
+}
+
+.golden-statement {
+  font-size: 1.12rem;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.celebrate-row {
+  display: flex;
+  justify-content: center;
+  margin: 14px 0 20px;
+}
+
+.gold-sparkle-btn {
+  background: linear-gradient(135deg, rgba(248, 215, 126, 0.25) 0%, rgba(180, 130, 25, 0.45) 100%) !important;
+  border: 1px solid var(--liquid-gold) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 25px rgba(248, 215, 126, 0.35) !important;
+}
+
+.gold-sparkle-btn:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 40px rgba(248, 215, 126, 0.6) !important;
+}
+
+.spark-icon {
+  font-size: 1.2rem;
+}
+
+/* ========================================================
+   CARTA PERSONAL
+   ======================================================== */
+.liquid-letter-paper {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 26px;
+  padding: 24px 26px;
+  font-size: clamp(0.92rem, 2.5vw, 0.98rem);
+  line-height: 1.85;
+  color: #cbd5e1;
+  margin-bottom: 18px;
+}
+
+.letter-signature {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.handwritten-sign {
+  font-family: var(--font-hand);
+  font-size: clamp(1.7rem, 4.2vw, 2.1rem);
+  color: var(--liquid-gold);
+  line-height: 1.2;
+}
+
+/* ========================================================
+   BOTONES LÍQUIDOS EN FORMA DE PÍLDORA (PILL BUTTONS)
+   ======================================================== */
+.capsule-footer {
+  display: flex;
+  margin-top: 8px;
+}
+
+.capsule-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.liquid-pill-btn {
+  border-radius: 999px;
+  padding: 11px 24px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.35s var(--ease-elastic);
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.liquid-pill-btn.primary {
+  background: var(--liquid-gold-grad);
+  color: #0b0c10;
+  box-shadow: 0 8px 25px rgba(248, 215, 126, 0.35);
+}
+
+.liquid-pill-btn.primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(248, 215, 126, 0.55);
+}
+
+.liquid-pill-btn.secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #e2e8f0;
+  backdrop-filter: blur(12px);
+}
+
+.liquid-pill-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ========================================================
+   PAGINADOR ORBITAL FLOTANTE (PUNTOS LÍQUIDOS)
+   ======================================================== */
+.liquid-orbit-nav {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.orbit-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s var(--ease-elastic);
+  padding: 0;
+}
+
+.orbit-dot.active {
+  width: 26px;
+  border-radius: 999px;
+  background: var(--liquid-gold);
+  box-shadow: 0 0 14px rgba(248, 215, 126, 0.8);
+}
+
+/* ========================================================
+   MODAL LIGHTBOX
+   ======================================================== */
+.liquid-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s ease;
+}
+
+.liquid-lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-blur-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(20px);
+}
+
+.lightbox-card {
+  position: relative;
+  z-index: 2;
+  max-width: 92vw;
+  max-height: 85vh;
+  text-align: center;
+}
+
+.lightbox-card img {
+  max-width: 100%;
+  max-height: 72vh;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: -42px;
+  right: -5px;
+  background: transparent;
+  border: none;
+  font-size: 2.2rem;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+#lightbox-caption {
+  margin-top: 12px;
+  color: #cbd5e1;
+  font-size: 0.92rem;
+  font-style: italic;
+}
+
+/* ========================================================
+   RESPONSIVE DESIGN (SMARTPHONES, TABLETS & PC)
+   ======================================================== */
+/* Ocultar flechas de pantalla en pantallas pequeñas */
+@media (max-width: 900px) {
+  .screen-arrow {
+    display: none;
+  }
+}
+
+/* Tablets (iPad, Galaxy Tab, 768px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .liquid-capsule {
+    max-width: 660px;
+    width: 86%;
+  }
+
+  .liquid-glass {
+    padding: 36px 40px;
+    border-radius: 40px;
+  }
+
+  .screen-arrow {
+    width: 44px;
+    height: 44px;
+  }
+  .arrow-prev { left: 16px; }
+  .arrow-next { right: 16px; }
+}
+
+/* Smartphones (iPhone, Android hasta 768px) */
+@media (max-width: 768px) {
+  .story-progress-bar {
+    top: 10px;
+    left: 14px;
+    right: 14px;
+  }
+
+  .floating-actions {
+    top: 20px;
+    right: 14px;
+    gap: 8px;
+  }
+
+  .liquid-icon-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .narrative-viewport {
+    padding: 12px 14px;
+  }
+
+  .liquid-capsule {
+    width: 94%;
+    max-height: calc(100dvh - 84px);
+  }
+
+  .liquid-glass {
+    padding: 24px 20px;
+    border-radius: 32px;
+    max-height: calc(100dvh - 90px);
+  }
+
+  .liquid-media-bubble {
+    height: 190px;
+    border-radius: 20px;
+    margin: 12px 0 16px 0;
+  }
+
+  .liquid-letter-paper {
+    padding: 18px 18px;
+    border-radius: 20px;
+  }
+
+  .liquid-orbit-nav {
+    bottom: 16px;
+    padding: 6px 14px;
+    gap: 10px;
+  }
+
+  .capsule-nav {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .liquid-pill-btn {
+    padding: 10px 18px;
+    font-size: 0.82rem;
+  }
+}
+
+/* Pantallas móviles muy pequeñas (menores a 380px) */
+@media (max-width: 380px) {
+  .liquid-glass {
+    padding: 20px 16px;
+    border-radius: 26px;
+  }
+
+  .liquid-name {
+    font-size: 2.3rem;
+  }
+
+  .liquid-media-bubble {
+    height: 160px;
+  }
+}
