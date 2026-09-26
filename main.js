@@ -721,14 +721,30 @@ document.addEventListener('DOMContentLoaded', () => {
   animate();
   startChapterAutoPlay(0);
 
+  // Activación de música continua desde el inicio
+  function activateMusic() {
+    if (window.cosmicAudio) {
+      window.cosmicAudio.start();
+      updateAudioButtonUI(true);
+    }
+  }
+
+  // Intento inmediato al cargar
+  activateMusic();
+
+  // Desbloqueo universal garantizado en la primera interacción en cualquier parte
+  const unlockAudioEvents = ['click', 'touchstart', 'pointerdown', 'keydown', 'scroll'];
+  const handleUserGesture = () => {
+    activateMusic();
+    unlockAudioEvents.forEach(evt => window.removeEventListener(evt, handleUserGesture, true));
+  };
+  unlockAudioEvents.forEach(evt => window.addEventListener(evt, handleUserGesture, { capture: true, passive: true }));
+
   // Botón Iniciar Recorrido
   const startBtn = document.getElementById('start-journey-btn');
   if (startBtn) {
     startBtn.addEventListener('click', () => {
-      if (window.cosmicAudio && !window.cosmicAudio.isPlaying) {
-        window.cosmicAudio.start();
-        updateAudioButtonUI(true);
-      }
+      activateMusic();
       goToChapter(1);
     });
   }

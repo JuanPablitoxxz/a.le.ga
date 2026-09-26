@@ -73,19 +73,21 @@ class CosmicAudioEngine {
 
   start() {
     this.init();
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {});
     }
 
+    if (this.isPlaying) return;
     this.isPlaying = true;
 
     // Fade in del Master
     const now = this.ctx.currentTime;
     this.masterGain.gain.cancelScheduledValues(now);
-    this.masterGain.gain.linearRampToValueAtTime(0.28, now + 3);
+    this.masterGain.gain.linearRampToValueAtTime(0.28, now + 2);
 
     // Iniciar ciclo de acordes
     this.playNextChord();
+    if (this.padTimer) clearInterval(this.padTimer);
     this.padTimer = setInterval(() => {
       this.playNextChord();
     }, 7000);
